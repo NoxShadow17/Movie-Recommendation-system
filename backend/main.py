@@ -19,7 +19,8 @@ app = FastAPI(
 # Configure CORS dynamically
 cors_origins_env = os.getenv("BACKEND_CORS_ORIGINS", "")
 if cors_origins_env:
-    origins = [origin.strip() for origin in cors_origins_env.split(",") if origin.strip()]
+    # Strip trailing slashes — browsers send origins without trailing slash
+    origins = [origin.strip().rstrip("/") for origin in cors_origins_env.split(",") if origin.strip()]
 else:
     # Note: "*" wildcard cannot be used with allow_credentials=True
     # Always set BACKEND_CORS_ORIGINS in production to your frontend URL
