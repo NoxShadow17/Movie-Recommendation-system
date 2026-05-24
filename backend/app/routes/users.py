@@ -329,7 +329,7 @@ def get_user_preferences(
                 "favorite_genre": favorite_genre,
                 "favorite_mood": favorite_mood,
                 "rating_distribution": _get_rating_distribution(user_ratings),
-                "last_activity": max([r.created_at for r in user_ratings]).isoformat() if user_ratings else None
+                "last_activity": max([_parse_date(r.created_at) for r in user_ratings]).isoformat() if user_ratings else None
             }
         }
         
@@ -339,6 +339,22 @@ def get_user_preferences(
             detail=f"Error calculating preferences: {str(e)}"
         )
 
+
+from datetime import datetime
+
+def _parse_date(date_val):
+    if isinstance(date_val, str):
+        try:
+            return datetime.fromisoformat(date_val.replace('Z', '+00:00'))
+        except ValueError:
+            try:
+                # Handle space-separated SQLite dates
+                return datetime.strptime(date_val.split('.')[0], "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                return datetime.now()
+    if date_val is None:
+        return datetime.now()
+    return date_val
 
 @router.get("/me/preferences/detailed", response_model=Dict[str, Any])
 def get_detailed_user_preferences(
@@ -367,6 +383,8 @@ def get_detailed_user_preferences(
         return {**basic_prefs, "insights": insights}
         
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error calculating detailed preferences: {str(e)}"
@@ -452,8 +470,8 @@ def _analyze_genre_evolution(user_ratings: List[Rating], db: Session) -> Dict[st
     if len(user_ratings) < 5:
         return {"message": "Need more ratings to analyze evolution"}
     
-    # Sort by date
-    sorted_ratings = sorted(user_ratings, key=lambda x: x.created_at)
+    # Sort by date safely
+    sorted_ratings = sorted(user_ratings, key=lambda x: _parse_date(x.created_at))
     
     # Split into early and recent ratings
     mid_point = len(sorted_ratings) // 2
@@ -498,7 +516,7 @@ def _calculate_recommendation_confidence(user_ratings: List[Rating]) -> float:
     
     # 3. Time span (longer history = higher confidence)
     if len(user_ratings) > 1:
-        time_span = max([r.created_at for r in user_ratings]) - min([r.created_at for r in user_ratings])
+        time_span = max([_parse_date(r.created_at) for r in user_ratings]) - min([_parse_date(r.created_at) for r in user_ratings])
         time_days = time_span.days
         time_score = min(time_days / 90 * 20, 20)  # Max 20 points for time span
     else:
