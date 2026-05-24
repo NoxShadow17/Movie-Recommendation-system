@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 export default function AIAssistant() {
     const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +28,7 @@ export default function AIAssistant() {
         setIsTyping(true);
 
         try {
-            const response = await fetch('http://localhost:8000/api/v1/chat/', {
+            const response = await fetch(`${API_BASE_URL}/api/v1/chat/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

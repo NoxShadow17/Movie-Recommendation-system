@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 const WatchPartyPage = () => {
     const [friends, setFriends] = useState([]);
@@ -16,7 +17,7 @@ const WatchPartyPage = () => {
 
     const fetchFriends = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/v1/friends/list', {
+            const response = await fetch(`${API_BASE_URL}/api/v1/friends/list`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -41,7 +42,7 @@ const WatchPartyPage = () => {
 
         setSearching(true);
         try {
-            const response = await fetch('http://localhost:8000/api/v1/recommendations/watch-party', {
+            const response = await fetch(`${API_BASE_URL}/api/v1/recommendations/watch-party`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

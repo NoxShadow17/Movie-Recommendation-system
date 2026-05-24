@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 export default function MovieCard({ movie, token }) {
   const [rating, setRating] = useState(0);
@@ -15,7 +16,7 @@ export default function MovieCard({ movie, token }) {
     if (!userId) return;
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/movies/${movie.id}/ratings`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/movies/${movie.id}/ratings`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 

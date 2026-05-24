@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 const GENRES = [
   'All', 'Action', 'Adventure', 'Animation', 'Comedy', 'Crime',
@@ -41,7 +42,7 @@ export default function MoviesPage() {
 
     try {
       const skip = pageNum * limit;
-      let url = `http://localhost:8000/api/v1/movies/?skip=${skip}&limit=${limit}`;
+      let url = `${API_BASE_URL}/api/v1/movies/?skip=${skip}&limit=${limit}`;
 
       if (debouncedSearch) {
         url += `&search=${encodeURIComponent(debouncedSearch)}`;

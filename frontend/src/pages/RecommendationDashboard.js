@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 import { Line, Bar, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -38,7 +39,7 @@ export default function RecommendationDashboard() {
   const fetchStats = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/v1/recommendations/profile/stats', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/recommendations/profile/stats`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -55,7 +56,7 @@ export default function RecommendationDashboard() {
 
   const updateProfile = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/recommendations/profile/update', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/recommendations/profile/update`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });

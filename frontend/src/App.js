@@ -14,6 +14,7 @@ import UpcomingMovieDetailPage from './pages/UpcomingMovieDetailPage';
 import UserProfilePage from './pages/UserProfilePage';
 import Navbar from './components/Navbar';
 import AIAssistant from './components/AIAssistant';
+import { API_BASE_URL } from './config';
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -27,7 +28,7 @@ function App() {
 
   const fetchUser = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/auth/me', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -51,7 +52,7 @@ function App() {
     // Fetch user data to get user_id synchronously
     try {
       console.log('🔍 Fetching user data...');
-      const response = await fetch('http://localhost:8000/api/v1/auth/me', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
         headers: { 'Authorization': `Bearer ${newToken}` }
       });
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 export default function LoginPage({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -14,7 +15,7 @@ export default function LoginPage({ onLogin }) {
     setLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/auth/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/auth/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -44,7 +45,7 @@ export default function LoginPage({ onLogin }) {
         }
       }
     } catch (err) {
-      setError('Connection error: Make sure the backend server is running on http://localhost:8000');
+      setError(`Connection error: Make sure the backend server is running on ${API_BASE_URL}`);
     } finally {
       setLoading(false);
     }

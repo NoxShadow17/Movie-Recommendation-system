@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 export default function RecommendationsPage() {
   const [recommendations, setRecommendations] = useState([]);
@@ -33,13 +34,13 @@ export default function RecommendationsPage() {
       const skip = pageIndex * LIMIT;
       let url = '';
       if (activeTab === 'personalized') {
-        url = `http://localhost:8000/api/v1/recommendations/?limit=${LIMIT}&skip=${skip}`;
+        url = `${API_BASE_URL}/api/v1/recommendations/?limit=${LIMIT}&skip=${skip}`;
       } else if (activeTab === 'trending') {
-        url = `http://localhost:8000/api/v1/recommendations/trending?limit=${LIMIT}&skip=${skip}`;
+        url = `${API_BASE_URL}/api/v1/recommendations/trending?limit=${LIMIT}&skip=${skip}`;
       } else if (activeTab === 'mood') {
-        url = `http://localhost:8000/api/v1/recommendations/mood/${mood}?limit=${LIMIT}&skip=${skip}`;
+        url = `${API_BASE_URL}/api/v1/recommendations/mood/${mood}?limit=${LIMIT}&skip=${skip}`;
       } else if (activeTab === 'friends') {
-        url = `http://localhost:8000/api/v1/recommendations/friends?limit=${LIMIT}&skip=${skip}`;
+        url = `${API_BASE_URL}/api/v1/recommendations/friends?limit=${LIMIT}&skip=${skip}`;
       }
 
       const response = await fetch(url, {

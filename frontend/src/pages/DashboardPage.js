@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import UpcomingMovies from '../components/UpcomingMovies';
+import { API_BASE_URL } from '../config';
 
 export default function DashboardPage() {
   const [recommendations, setRecommendations] = useState([]);
@@ -34,10 +35,10 @@ export default function DashboardPage() {
   const fetchData = async () => {
     try {
       const [recResponse, trendingResponse] = await Promise.all([
-        fetch('http://localhost:8000/api/v1/recommendations/?limit=8', {
+        fetch(`${API_BASE_URL}/api/v1/recommendations/?limit=8`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }),
-        fetch('http://localhost:8000/api/v1/recommendations/trending?limit=8', {
+        fetch(`${API_BASE_URL}/api/v1/recommendations/trending?limit=8`, {
           headers: { 'Authorization': `Bearer ${token}` }
         })
       ]);
@@ -59,7 +60,7 @@ export default function DashboardPage() {
 
   const fetchWatchlist = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/users/me/watchlist', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/users/me/watchlist`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -76,7 +77,7 @@ export default function DashboardPage() {
     const movieId = movie.id || movie.movie_id;
     const isInQueue = watchlist.some(m => (m.id || m.movie_id) === movieId);
 
-    const url = `http://localhost:8000/api/v1/users/${movieId}/${isInQueue ? 'remove-from-watchlist' : 'add-to-watchlist'}`;
+    const url = `${API_BASE_URL}/api/v1/users/${movieId}/${isInQueue ? 'remove-from-watchlist' : 'add-to-watchlist'}`;
     const method = isInQueue ? 'DELETE' : 'POST';
 
     try {
@@ -108,7 +109,7 @@ export default function DashboardPage() {
 
     setIsMoodLoading(true);
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/recommendations/mood/${moodValue}?limit=8`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/recommendations/mood/${moodValue}?limit=8`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 export default function MovieDetailPage() {
   const { id } = useParams();
@@ -30,7 +31,7 @@ export default function MovieDetailPage() {
 
   const fetchMovie = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/movies/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/movies/${id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -52,7 +53,7 @@ export default function MovieDetailPage() {
     if (!userId) return;
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/movies/${id}/ratings`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/movies/${id}/ratings`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -72,7 +73,7 @@ export default function MovieDetailPage() {
   const fetchWatchlist = async () => {
     if (!token) return;
     try {
-      const response = await fetch('http://localhost:8000/api/v1/users/me/watchlist', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/users/me/watchlist`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -87,7 +88,7 @@ export default function MovieDetailPage() {
   const fetchExplanation = async () => {
     if (!token) return;
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/movies/${id}/explanation`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/movies/${id}/explanation`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -104,7 +105,7 @@ export default function MovieDetailPage() {
     const movieId = movie.id;
     const isInWatchlist = watchlist.some(m => m.id === movieId);
 
-    const url = `http://localhost:8000/api/v1/users/${movieId}/${isInWatchlist ? 'remove-from-watchlist' : 'add-to-watchlist'}`;
+    const url = `${API_BASE_URL}/api/v1/users/${movieId}/${isInWatchlist ? 'remove-from-watchlist' : 'add-to-watchlist'}`;
     const method = isInWatchlist ? 'DELETE' : 'POST';
 
     try {
@@ -131,7 +132,7 @@ export default function MovieDetailPage() {
     }
 
     try {
-      await fetch(`http://localhost:8000/api/v1/movies/${id}/rate`, {
+      await fetch(`${API_BASE_URL}/api/v1/movies/${id}/rate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 export default function UpcomingMovieDetailPage() {
     const { tmdbId } = useParams();
@@ -14,7 +15,7 @@ export default function UpcomingMovieDetailPage() {
 
     const fetchMovieDetail = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/recommendations/upcoming/${tmdbId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/recommendations/upcoming/${tmdbId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {

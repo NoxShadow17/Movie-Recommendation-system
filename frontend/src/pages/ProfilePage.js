@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EditProfileModal from '../components/EditProfileModal';
+import { API_BASE_URL } from '../config';
 
 export default function ProfilePage({ user, onLogout }) {
   const navigate = useNavigate();
@@ -29,15 +30,15 @@ export default function ProfilePage({ user, onLogout }) {
 
   const fetchUserData = async () => {
     try {
-      const ratingsResponse = await fetch('http://localhost:8000/api/v1/users/me/ratings', {
+      const ratingsResponse = await fetch(`${API_BASE_URL}/api/v1/users/me/ratings`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      const preferencesResponse = await fetch('http://localhost:8000/api/v1/users/me/preferences/detailed', {
+      const preferencesResponse = await fetch(`${API_BASE_URL}/api/v1/users/me/preferences/detailed`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      const watchlistResponse = await fetch('http://localhost:8000/api/v1/users/me/watchlist', {
+      const watchlistResponse = await fetch(`${API_BASE_URL}/api/v1/users/me/watchlist`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -300,7 +301,7 @@ export default function ProfilePage({ user, onLogout }) {
                             e.preventDefault();
                             e.stopPropagation();
                             try {
-                              const response = await fetch(`http://localhost:8000/api/v1/users/${movie.id}/remove-from-watchlist`, {
+                              const response = await fetch(`${API_BASE_URL}/api/v1/users/${movie.id}/remove-from-watchlist`, {
                                 method: 'DELETE',
                                 headers: { 'Authorization': `Bearer ${token}` }
                               });

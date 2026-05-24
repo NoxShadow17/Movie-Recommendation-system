@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../config';
 
 export default function EditProfileModal({ user, isOpen, onClose, onUpdate }) {
     const [fullName, setFullName] = useState(user?.full_name || '');
@@ -16,7 +17,7 @@ export default function EditProfileModal({ user, isOpen, onClose, onUpdate }) {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8000/api/v1/users/me', {
+            const response = await fetch(`${API_BASE_URL}/api/v1/users/me`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 export default function UserProfilePage() {
     const { userId } = useParams();
@@ -26,7 +27,7 @@ export default function UserProfilePage() {
             setLoading(true);
             setError('');
 
-            const response = await fetch(`http://localhost:8000/api/v1/users/${userId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/users/${userId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -39,7 +40,7 @@ export default function UserProfilePage() {
 
             // Fetch friends list to check common connections or just context
             // Implementing basic fetch for now
-            const friendsRes = await fetch(`http://localhost:8000/api/v1/users/${userId}/friends`, {
+            const friendsRes = await fetch(`${API_BASE_URL}/api/v1/users/${userId}/friends`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (friendsRes.ok) {

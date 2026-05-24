@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 const UpcomingMovies = () => {
     const [movies, setMovies] = useState([]);
@@ -12,7 +13,7 @@ const UpcomingMovies = () => {
 
     const fetchUpcoming = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/v1/recommendations/upcoming?limit=6', {
+            const response = await fetch(`${API_BASE_URL}/api/v1/recommendations/upcoming?limit=6`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {

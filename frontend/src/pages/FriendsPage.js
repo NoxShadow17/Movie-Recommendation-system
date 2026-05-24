@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 const FriendsPage = () => {
   const [friends, setFriends] = useState([]);
@@ -20,7 +21,7 @@ const FriendsPage = () => {
   const token = localStorage.getItem('token');
 
   const api = axios.create({
-    baseURL: 'http://localhost:8000/api/v1',
+    baseURL: `${API_BASE_URL}/api/v1`,
     headers: {
       'Authorization': `Bearer ${token}`
     }
