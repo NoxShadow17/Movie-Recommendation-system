@@ -107,14 +107,16 @@ class MLRecommendationEngine:
             numerical_features = movie_features[cols].fillna(0).values
             numerical_features_scaled = self.scaler.fit_transform(numerical_features)
             
-            # Combine all features
-            self.movie_features_matrix = np.hstack([content_matrix.toarray(), numerical_features_scaled])
+            # Combine all features using sparse matrix to save memory
+            import scipy.sparse as sp
+            features_sparse = sp.hstack([content_matrix, numerical_features_scaled])
             
             # Transform movie features
-            self.movie_vectors = self.svd_model.fit_transform(self.movie_features_matrix)
+            self.movie_vectors = self.svd_model.fit_transform(features_sparse)
             
-            # Calculate movie similarity matrix
-            self.movie_similarity_matrix = cosine_similarity(self.movie_vectors)
+            # Free up memory
+            self.movie_features_matrix = None
+            self.movie_similarity_matrix = None
             
             self.is_trained = True
             
