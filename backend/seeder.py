@@ -14,12 +14,12 @@ logger = logging.getLogger(__name__)
 SEED_FILE = os.path.join(os.path.dirname(__file__), 'seed_data', 'seed_data.json.gz')
 
 # Tables and their insert order (respecting foreign key dependencies)
+# Note: user_friends is excluded — it's not in the SQLAlchemy schema (friendships covers it)
 TABLE_ORDER = [
     'users',
     'movies',
     'ratings',
     'friendships',
-    'user_friends',
     'user_watchlist',
     'trending_movies',
 ]
@@ -71,9 +71,15 @@ def run_seed():
 
         for table in TABLE_ORDER:
             rows = data.get(table, [])
-            if rows:
+            if not rows:
+                continue
+            try:
                 logger.info(f"  Seeding {len(rows)} rows into '{table}'...")
                 _bulk_insert(db, table, rows)
+                logger.info(f"  ✓ '{table}' done.")
+            except Exception as e:
+                logger.warning(f"  ⚠ Skipping '{table}': {e}")
+                db.rollback()  # rollback only this table's failed transaction
 
         logger.info("✅ Seed complete! Database is ready.")
     except Exception as e:
