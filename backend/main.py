@@ -1,4 +1,5 @@
 import os
+import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
@@ -6,8 +7,14 @@ from app.core.database import Base, engine
 from app.core.config import API_V1_STR
 from app.routes import auth, movies, recommendations, users, friends, chat
 
+logging.basicConfig(level=logging.INFO)
+
 # Create tables
 Base.metadata.create_all(bind=engine)
+
+# Auto-seed database if empty (loads local data on first deploy)
+from seeder import run_seed
+run_seed()
 
 # Initialize FastAPI app
 app = FastAPI(

@@ -50,6 +50,10 @@ Thumbs.db
 *.db
 movie_recommendation.db
 
+# Seed data (committed intentionally for Render deployment)
+!backend/seed_data/
+!backend/seed_data/*.gz
+
 # Logs
 *.log
 logs/
