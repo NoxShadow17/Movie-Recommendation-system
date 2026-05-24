@@ -27,8 +27,11 @@ class MLRecommendationEngine:
         self.user_profiles = {}
         self.movie_similarity_matrix = None
         self.is_trained = False
-        # Absolute path to backend directory
-        self.model_path = r"c:\Users\erari\Desktop\My Folder\Programs\Python Programs\Movie Recommendation system\backend\ml_models_cache.pkl"
+        # Dynamic path — works on local and Render
+        self.model_path = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+            'ml_models_cache.pkl'
+        )
         
         # Try loading existing model on init
         self.load_model()

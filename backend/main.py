@@ -1,5 +1,6 @@
 import os
 import logging
+import threading
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
@@ -8,6 +9,7 @@ from app.core.config import API_V1_STR
 from app.routes import auth, movies, recommendations, users, friends, chat
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Create tables
 Base.metadata.create_all(bind=engine)
@@ -15,6 +17,26 @@ Base.metadata.create_all(bind=engine)
 # Auto-seed database if empty (loads local data on first deploy)
 from seeder import run_seed
 run_seed()
+
+# Auto-train ML model in background if not already trained
+def _train_ml_model():
+    try:
+        from app.services.ml_recommendations import ml_engine
+        if not ml_engine.is_trained:
+            logger.info("🤖 ML model not trained — starting background training...")
+            from app.core.database import SessionLocal
+            db = SessionLocal()
+            try:
+                ml_engine.train_model(db, force=False)
+                logger.info("✅ ML model training complete!")
+            finally:
+                db.close()
+        else:
+            logger.info("✅ ML model already trained — skipping.")
+    except Exception as e:
+        logger.error(f"❌ ML model training failed: {e}")
+
+threading.Thread(target=_train_ml_model, daemon=True).start()
 
 # Initialize FastAPI app
 app = FastAPI(
